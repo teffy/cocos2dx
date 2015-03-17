@@ -4,4 +4,8 @@ http://blog.csdn.net/lsmfeixiang/article/category/2801901
 
 学习之路：<br />
 一、[《Cocos2d学习之路》一，前序和闹钟](https://github.com/teffy/cocos2dx/tree/master/Clock)<br /> 
-blog:http://blog.csdn.net/lsmfeixiang/article/details/42213929
+blog：http://blog.csdn.net/lsmfeixiang/article/details/42213929
+二、[《Cocos2d学习之路》二，触屏事件的学习](https://github.com/teffy/cocos2dx/tree/master/Clock)<br/> 这个和一是用的同一个项目
+blog：http://blog.csdn.net/lsmfeixiang/article/details/42213997
+三、[《Cocos2d学习之路》三，学习使用TexturePacker创建动画效果](https://github.com/teffy/cocos2dx/tree/master/UseTexturePacker)<br/>
+blog：http://blog.csdn.net/lsmfeixiang/article/details/42214027
