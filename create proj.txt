@@ -1,0 +1,3 @@
+cd /d D:\Cocos\cocos2d-x-3.4\tools\cocos2d-console\bin
+
+python cocos.py new ProjName -p com.xxx.packagename -l cpp -d G:/cocos2dspace

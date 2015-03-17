@@ -1,0 +1,6 @@
+碰撞检测：
+1、点和矩形的碰撞检测：矩形 contain 点
+_sp1->boundingBox().containsPoint(touch->getLocation())
+2、矩形和矩形  矩形 intersectsRect 矩形
+sp1->boundingBox().intersectsRect(sp1->boundingBox())
+3、精灵的一边的三个点和矩形碰撞

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="101" tileheight="81" nextobjectid="4">
+ <tileset firstgid="1" name="Untitled" tilewidth="101" tileheight="171" spacing="2" margin="2">
+  <image source="test2_2.png" width="1024" height="1024"/>
+ </tileset>
+ <tileset firstgid="46" name="tileset2" tilewidth="101" tileheight="171" spacing="2" margin="2">
+  <image source="test2.png" width="1024" height="1024"/>
+ </tileset>
+ <layer name="Layer 0" width="12" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAX4AB8Q8wOxAJSvBMRcQMyNhHEBZiBmAmIWIGYFYjYS7BUCYmEg1gBiVSBWgYqrImFBINYGYgkgFgFiUah6LiLUw9xOrPncOMwHAN53jmxAAgAA
+  </data>
+ </layer>
+ <layer name="Layer 1" width="12" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAXUBNZAbAPEtmToNQBifSA2BGIjIDYmQa89GfbhMgcd4wMA7a2boEACAAA=
+  </data>
+ </layer>
+ <layer name="Layer 2" width="12" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAUDCfiAmB+IBcjQywzETEDMAsSsQMxGgl4hMuzDBgAgyUssQAIAAA==
+  </data>
+ </layer>
+ <objectgroup name="Obj1">
+  <object id="1" name="o1" x="254" y="610" width="277" height="130" rotation="7">
+   <properties>
+    <property name="aa" value="12"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
