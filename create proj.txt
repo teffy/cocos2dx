@@ -1,3 +1,14 @@
-cd /d D:\Cocos\cocos2d-x-3.4\tools\cocos2d-console\bin
+﻿cd /d D:\Cocos\cocos2d-x-3.4\tools\cocos2d-console\bin
 
-python cocos.py new ProjName -p com.xxx.packagename -l cpp -d G:/cocos2dspace
+python cocos.py new ProjName -p com.xxx.packagename -l cpp -d G:/cocos2dx
+
+vs快捷键：
+Ctrl + J 代码提示
+强迫显示参数信息：Ctrl-Shift-空格
+重命名：F2
+插入代码段：Ctrl+K，X
+逐句和逐过程调试：F11和F10。这个绝对比F5更经常使用。
+全部注释：Ctrl+E，C。在某些时候，这绝对是个省力气的东西。与之对应的全部取消注释：“Ctrl+E，U”
+F12查看类定义
+alt+F12
+shift+F12

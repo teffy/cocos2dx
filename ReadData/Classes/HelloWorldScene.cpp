@@ -72,9 +72,6 @@ bool HelloWorld::init() {
 							- closeItem->getContentSize().width / 2,
 					origin.y + closeItem->getContentSize().height / 2));
 
-	MenuItemFont* http = MenuItemFont::create("Http",
-			CC_CALLBACK_1(HelloWorld::menuHttpCallback, this));
-	http->setPosition(Vec2(visibleSize.width / 3, visibleSize.height * 2 / 3));
 
 	MenuItemFont* userDefault = MenuItemFont::create("UserDefault",
 			CC_CALLBACK_1(HelloWorld::menuUserDefaultCallback, this));
@@ -97,7 +94,7 @@ bool HelloWorld::init() {
 					visibleSize.height * 2 / 3
 							+ sqlite3->getContentSize().height * 3));
 
-	auto menu = Menu::create(closeItem, http, userDefault, plist, sqlite3,
+	auto menu = Menu::create(closeItem, userDefault, plist, sqlite3,
 			NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
@@ -143,9 +140,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender) {
 
 }
 
-void HelloWorld::menuHttpCallback(Ref* pSender) {
 
-}
 void HelloWorld::menuPlistCallback(Ref* pSender) {
 	Dictionary* dict = Dictionary::createWithContentsOfFile("res/aaa.plist");
 	const __String* ss = dict->valueForKey("name");
