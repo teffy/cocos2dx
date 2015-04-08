@@ -10,49 +10,58 @@ Scene* HelloWorld::createScene()
 
 bool HelloWorld::init()
 {
-
     if ( !Layer::init() )
     {
         return false;
     }
-    
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
                                            "CloseSelected.png",
                                            CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2));
+
 	MenuItemFont* httpGet = MenuItemFont::create("httpGet", CC_CALLBACK_1(HelloWorld::menuGetCallback, this));
-	httpGet->setPosition(Vec2(visibleSize.width / 2 -100, visibleSize.height / 2 + httpGet->getContentSize().height * 2));
-
+	httpGet->setPosition(Vec2(visibleSize.width / 6, visibleSize.height - httpGet->getContentSize().height));
 	MenuItemFont* httpPost = MenuItemFont::create("httpPost", CC_CALLBACK_1(HelloWorld::menuPostCallback, this));
-	httpPost->setPosition(Vec2(visibleSize.width / 2 - 100, visibleSize.height / 2 + httpPost->getContentSize().height));
-
-
+	httpPost->setPosition(Vec2(visibleSize.width / 6, visibleSize.height - httpPost->getContentSize().height*2));
 	MenuItemFont* httpPut = MenuItemFont::create("httpPut", CC_CALLBACK_1(HelloWorld::menuPutCallback, this));
-	httpPut->setPosition(Vec2(visibleSize.width / 2 - 100, visibleSize.height / 2 - httpPut->getContentSize().height));
-
+	httpPut->setPosition(Vec2(visibleSize.width / 6, visibleSize.height - httpPut->getContentSize().height*3));
 	MenuItemFont* httpDelete = MenuItemFont::create("httpDelete", CC_CALLBACK_1(HelloWorld::menuDeleteCallback, this));
-	httpDelete->setPosition(Vec2(visibleSize.width / 2 - 100, visibleSize.height / 2 - httpDelete->getContentSize().height * 2));
+	httpDelete->setPosition(Vec2(visibleSize.width / 6, visibleSize.height - httpDelete->getContentSize().height * 4));
 
+	MenuItemFont* openSocket = MenuItemFont::create("Socket Open", CC_CALLBACK_1(HelloWorld::menuOpenSocketCallback, this));
+	openSocket->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - openSocket->getContentSize().height * 1));
+	MenuItemFont* sendMsg = MenuItemFont::create("SendMsg", CC_CALLBACK_1(HelloWorld::menuSendMsgCallback, this));
+	sendMsg->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - sendMsg->getContentSize().height * 2));
+	MenuItemFont* sendEvent = MenuItemFont::create("sendEvent", CC_CALLBACK_1(HelloWorld::menuSendEventCallback, this));
+	sendEvent->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - sendEvent->getContentSize().height * 3));
+	MenuItemFont* closeSocket = MenuItemFont::create("closeSocket", CC_CALLBACK_1(HelloWorld::menuCloseSocketCallback, this));
+	closeSocket->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - closeSocket->getContentSize().height * 4));
 
-	auto menu = Menu::create(closeItem, httpGet, httpPost, httpPut, httpDelete, NULL);
+	MenuItemFont* webSocket = MenuItemFont::create("WebSocket", CC_CALLBACK_1(HelloWorld::menuWebSocketCallback, this));
+	webSocket->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - webSocket->getContentSize().height * 6));
+
+	auto menu = Menu::create(
+			closeItem, httpGet, httpPost, httpPut, httpDelete,
+			openSocket,sendMsg,sendEvent,closeSocket,webSocket,
+			NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
-    
+
     label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    
-    label->setPosition(Vec2(origin.x + visibleSize.width/2+200,
-                            origin.y + visibleSize.height/2));
+    label->setPosition(Vec2(origin.x + visibleSize.width/2, origin.y + visibleSize.height/2 - 100));
     this->addChild(label, 1);
     auto sprite = Sprite::create("HelloWorld.png");
     sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     this->addChild(sprite, 0);
-    
+
+    _webSocket = new WebSocket();
+    if(!_webSocket->init(*this,"ws://echo.websocket.org")){
+    	CC_SAFE_DELETE(_webSocket);
+    }
     return true;
 }
 
@@ -63,9 +72,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
     return;
 #endif
-
     Director::getInstance()->end();
-
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
@@ -214,4 +221,106 @@ void HelloWorld::onHttpCompletedCallback(HttpClient *httpClient, HttpResponse *r
 	log("data:\n%s", str.c_str());
 
 	label->setString(str);
+}
+
+void HelloWorld::menuOpenSocketCallback(cocos2d::Ref* pSender){
+	_client = SocketIO::connect("10.11.41.43:1987",*this);
+	_client->setTag("Socket");
+	_client->on("Sendmsg",CC_CALLBACK_2(HelloWorld::sendMsgCallBack,this));
+	_client->on("Sendmsg",CC_CALLBACK_2(HelloWorld::sendEventCallBack,this));
+}
+void HelloWorld::menuSendMsgCallback(cocos2d::Ref* pSender){
+	if(_client != nullptr){
+		_client->send("Hello,I am cocos2dx client!");
+	}
+
+}
+void HelloWorld::menuSendEventCallback(cocos2d::Ref* pSender){
+	if(_client != nullptr){
+		_client->emit("echo","[{\"name\":\"cocos\",\"type\":\"2dx\"}]");
+	}
+}
+void HelloWorld::menuCloseSocketCallback(cocos2d::Ref* pSender){
+	if(_client != nullptr){
+		_client->disconnect();
+		_client = nullptr;
+	}
+}
+
+void HelloWorld::sendMsgCallBack(SIOClient* client,const std::string data){
+	log("sendMsg with data:%s",data.c_str());
+	std::stringstream s;
+	s << client->getTag() << " received event testevent with data: " << data.c_str();
+	label->setString(s.str().c_str());
+}
+void HelloWorld::sendEventCallBack(SIOClient* client,const std::string data){
+	log("sendMsg with data:%s",data.c_str());
+	std::stringstream s;
+	s << client->getTag() << " received event testevent with data: " << data.c_str();
+	label->setString(s.str().c_str());
+}
+
+void HelloWorld::onConnect(SIOClient* client){
+	log("onConnect");
+	std::stringstream s;
+	s<<client->getTag()<<" connect!";
+	label->setString(s.str().c_str());
+}
+void HelloWorld::onMessage(SIOClient* client, const std::string& data){
+	log("onMessage");
+	std::stringstream s;
+	s<<client->getTag()<<" receive Message!"<<data.c_str();
+	label->setString(s.str().c_str());
+}
+void HelloWorld::onClose(SIOClient* client){
+	log("onMessage");
+	std::stringstream s;
+	s<<client->getTag()<<" Close!";
+	label->setString(s.str().c_str());
+	if(client == _client){
+		_client = nullptr;
+	}
+}
+void HelloWorld::onError(SIOClient* client, const std::string& data){
+	log("onMessage");
+	std::stringstream s;
+	s<<client->getTag()<<" receive Error!"<<data.c_str();
+	label->setString(s.str().c_str());
+}
+HelloWorld::HelloWorld(void){}
+HelloWorld::~HelloWorld(void){}
+
+void HelloWorld::menuWebSocketCallback(Ref* pSender){
+	if(!_webSocket){
+		return;
+	}
+	if(_webSocket->getReadyState() == WebSocket::State::OPEN){
+		label->setString("sending message...");
+		_webSocket->send("Hello WebSocket,I am cocox2dx");
+	}else{
+		label->setString("WebSocket is not ready...");
+	}
+}
+void HelloWorld::onOpen(WebSocket* ws){
+	if(ws == _webSocket){
+		label->setString("WebSocket opened");
+		CCASSERT(0,"Opened");
+	}
+}
+void HelloWorld::onMessage(WebSocket* ws, const WebSocket::Data& data){
+	std::string printmsg = std::string("response msg:")+data.bytes;
+	label->setString(printmsg.c_str());
+}
+void HelloWorld::onClose(WebSocket* ws){
+	if(ws == _webSocket){
+		_webSocket = nullptr;
+	}
+	CC_SAFE_DELETE(ws);
+}
+void HelloWorld::onError(WebSocket* ws, const WebSocket::ErrorCode& error){
+	if(ws == _webSocket){
+		char buf[100] ={0};
+		sprintf(buf,"WebSocket error,code:%d",error);
+		label->setString(buf);
+	}
 }
