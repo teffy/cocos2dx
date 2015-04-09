@@ -33,16 +33,16 @@ bool HelloWorld::init()
 	httpDelete->setPosition(Vec2(visibleSize.width / 6, visibleSize.height - httpDelete->getContentSize().height * 4));
 
 	MenuItemFont* openSocket = MenuItemFont::create("Socket Open", CC_CALLBACK_1(HelloWorld::menuOpenSocketCallback, this));
-	openSocket->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - openSocket->getContentSize().height * 1));
+	openSocket->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - openSocket->getContentSize().height * 1));
 	MenuItemFont* sendMsg = MenuItemFont::create("SendMsg", CC_CALLBACK_1(HelloWorld::menuSendMsgCallback, this));
-	sendMsg->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - sendMsg->getContentSize().height * 2));
+	sendMsg->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - sendMsg->getContentSize().height * 2));
 	MenuItemFont* sendEvent = MenuItemFont::create("sendEvent", CC_CALLBACK_1(HelloWorld::menuSendEventCallback, this));
-	sendEvent->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - sendEvent->getContentSize().height * 3));
+	sendEvent->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - sendEvent->getContentSize().height * 3));
 	MenuItemFont* closeSocket = MenuItemFont::create("closeSocket", CC_CALLBACK_1(HelloWorld::menuCloseSocketCallback, this));
-	closeSocket->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - closeSocket->getContentSize().height * 4));
+	closeSocket->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - closeSocket->getContentSize().height * 4));
 
 	MenuItemFont* webSocket = MenuItemFont::create("WebSocket", CC_CALLBACK_1(HelloWorld::menuWebSocketCallback, this));
-	webSocket->setPosition(Vec2(visibleSize.width / 3, visibleSize.height - webSocket->getContentSize().height * 6));
+	webSocket->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - webSocket->getContentSize().height * 6));
 
 	auto menu = Menu::create(
 			closeItem, httpGet, httpPost, httpPut, httpDelete,
@@ -304,7 +304,6 @@ void HelloWorld::menuWebSocketCallback(Ref* pSender){
 void HelloWorld::onOpen(WebSocket* ws){
 	if(ws == _webSocket){
 		label->setString("WebSocket opened");
-		CCASSERT(0,"Opened");
 	}
 }
 void HelloWorld::onMessage(WebSocket* ws, const WebSocket::Data& data){
