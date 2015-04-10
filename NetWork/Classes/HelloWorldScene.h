@@ -42,6 +42,7 @@ public:
 	void menuSendEventCallback(cocos2d::Ref* pSender);
 	void menuCloseSocketCallback(cocos2d::Ref* pSender);
 	void menuWebSocketCallback(cocos2d::Ref* pSender);
+	void menuWebSocketSendCallback(cocos2d::Ref* pSender);
 
 	void sendMsgCallBack(SIOClient* client,const std::string data);
 	void sendEventCallBack(SIOClient* client,const std::string data);

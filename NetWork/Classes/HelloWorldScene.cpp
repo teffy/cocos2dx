@@ -43,10 +43,12 @@ bool HelloWorld::init()
 
 	MenuItemFont* webSocket = MenuItemFont::create("WebSocket", CC_CALLBACK_1(HelloWorld::menuWebSocketCallback, this));
 	webSocket->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - webSocket->getContentSize().height * 6));
+	MenuItemFont* webSocketSendMsg = MenuItemFont::create("WebSocketSendMsg", CC_CALLBACK_1(HelloWorld::menuWebSocketSendCallback ,this));
+	webSocketSendMsg->setPosition(Vec2(visibleSize.width * 0.4f, visibleSize.height - webSocketSendMsg->getContentSize().height * 7));
 
 	auto menu = Menu::create(
 			closeItem, httpGet, httpPost, httpPut, httpDelete,
-			openSocket,sendMsg,sendEvent,closeSocket,webSocket,
+			openSocket, sendMsg, sendEvent, closeSocket, webSocket, webSocketSendMsg,
 			NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
@@ -57,11 +59,7 @@ bool HelloWorld::init()
     auto sprite = Sprite::create("HelloWorld.png");
     sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     this->addChild(sprite, 0);
-
-    _webSocket = new WebSocket();
-    if(!_webSocket->init(*this,"ws://echo.websocket.org")){
-    	CC_SAFE_DELETE(_webSocket);
-    }
+  
     return true;
 }
 
@@ -219,21 +217,19 @@ void HelloWorld::onHttpCompletedCallback(HttpClient *httpClient, HttpResponse *r
 	}*/
 	std::string str(data->begin(),data->end());
 	log("data:\n%s", str.c_str());
-
 	label->setString(str);
 }
 
 void HelloWorld::menuOpenSocketCallback(cocos2d::Ref* pSender){
-	_client = SocketIO::connect("10.11.41.43:1987",*this);
+	_client = SocketIO::connect("10.11.41.43:18889",*this);
 	_client->setTag("Socket");
-	_client->on("Sendmsg",CC_CALLBACK_2(HelloWorld::sendMsgCallBack,this));
-	_client->on("Sendmsg",CC_CALLBACK_2(HelloWorld::sendEventCallBack,this));
+	_client->on("sendMsgCallBack",CC_CALLBACK_2(HelloWorld::sendMsgCallBack,this));
+	_client->on("sendEventCallBack",CC_CALLBACK_2(HelloWorld::sendEventCallBack,this));
 }
 void HelloWorld::menuSendMsgCallback(cocos2d::Ref* pSender){
 	if(_client != nullptr){
 		_client->send("Hello,I am cocos2dx client!");
 	}
-
 }
 void HelloWorld::menuSendEventCallback(cocos2d::Ref* pSender){
 	if(_client != nullptr){
@@ -273,7 +269,7 @@ void HelloWorld::onMessage(SIOClient* client, const std::string& data){
 	label->setString(s.str().c_str());
 }
 void HelloWorld::onClose(SIOClient* client){
-	log("onMessage");
+	log("onClose");
 	std::stringstream s;
 	s<<client->getTag()<<" Close!";
 	label->setString(s.str().c_str());
@@ -282,7 +278,7 @@ void HelloWorld::onClose(SIOClient* client){
 	}
 }
 void HelloWorld::onError(SIOClient* client, const std::string& data){
-	log("onMessage");
+	log("onError");
 	std::stringstream s;
 	s<<client->getTag()<<" receive Error!"<<data.c_str();
 	label->setString(s.str().c_str());
@@ -291,13 +287,20 @@ HelloWorld::HelloWorld(void){}
 HelloWorld::~HelloWorld(void){}
 
 void HelloWorld::menuWebSocketCallback(Ref* pSender){
-	if(!_webSocket){
+	_webSocket = new WebSocket();
+	if (!_webSocket->init(*this, "ws://echo.websocket.org")){
+		CC_SAFE_DELETE(_webSocket);
+	}
+}
+void HelloWorld::menuWebSocketSendCallback(Ref* pSender){
+	if (!_webSocket){
 		return;
 	}
-	if(_webSocket->getReadyState() == WebSocket::State::OPEN){
+	if (_webSocket->getReadyState() == WebSocket::State::OPEN){
 		label->setString("sending message...");
 		_webSocket->send("Hello WebSocket,I am cocox2dx");
-	}else{
+	}
+	else{
 		label->setString("WebSocket is not ready...");
 	}
 }
