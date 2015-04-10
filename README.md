@@ -23,5 +23,5 @@ blog：http://blog.csdn.net/lsmfeixiang/article/details/43411919<br/><br/>
 blog：http://blog.csdn.net/lsmfeixiang/article/details/43673603<br/><br/>
 九、[《Cocos2d学习之路》九、数据存储的几种方式和基本使用](https://github.com/teffy/cocos2dx/tree/master/ReadData)<br/>
 blog：http://blog.csdn.net/lsmfeixiang/article/details/43706551<br/><br/>
-十、[《Cocos2d学习之路》十、网络请求HttpClient,Socket,WebService](https://github.com/teffy/cocos2dx/tree/master/NetWork)<br/>
+十、[《Cocos2d学习之路》十、网络请求HttpClient,Socket,WebSocket](https://github.com/teffy/cocos2dx/tree/master/NetWork)<br/>
 blog:http://blog.csdn.net/lsmfeixiang/article/details/44957459<br/><br/>
